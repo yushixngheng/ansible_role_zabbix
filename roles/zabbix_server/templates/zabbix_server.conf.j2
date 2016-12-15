@@ -1,0 +1,15 @@
+LogFile=/var/log/zabbix/zabbix_server.log
+LogFileSize=0
+PidFile=/var/run/zabbix/zabbix_server.pid
+
+DBName=zabbix
+DBUser=zabbix
+DBPassword={{ zabbix.mysql_password }}
+DBSocket=/var/lib/mysql/mysql.sock
+
+SNMPTrapperFile=/var/log/snmptt/snmptt.log
+
+
+AlertScriptsPath=/usr/lib/zabbix/alertscripts
+
+ExternalScripts=/usr/lib/zabbix/externalscripts

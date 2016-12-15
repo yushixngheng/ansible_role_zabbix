@@ -1,0 +1,38 @@
+#file roles/php/defaults/main.yml
+---
+
+repo_url: "http://mirror.webtatic.com/yum/el6/latest.rpm"
+
+fpm_daemonize: "yes"
+fpm_pid: /var/run/php-fpm/php-fpm.pid
+
+#php.ini setting
+php_module_path: "/usr/lib64/php/modules/"
+
+#php-fpm pool setting
+fpm_pool_name: "www"
+fpm_user: www
+fpm_group: www
+fpm_listen_ip: 127.0.0.1
+fpm_listen_port: 9000
+fpm_pool_session_path: /var/lib/php/session
+fpm_pool_log_path: /var/log/php-fpm
+fpm_pool_slow_log: "{{ fpm_pool_log_path }}/slow-{{ fpm_pool_name }}.log"
+fpm_pool_error_log: "{{ fpm_pool_log_path }}/{{ fpm_pool_name }}-error.log"
+
+php_memory_limit: 128M
+php_datezone: Asia/Shanghai
+php_max_execution_time: 300
+php_max_input_time: 300
+php_post_max_size: 16M
+
+php_depend_package:
+    - php56w
+    - php56w-fpm
+    - php56w-cli
+    - php56w-common
+    - php56w-bcmath
+    - php56w-gd
+    - php56w-mbstring
+    - php56w-xml
+    - php56w-mysql

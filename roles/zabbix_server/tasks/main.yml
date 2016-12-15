@@ -1,0 +1,27 @@
+#file reoles/ zabbix_server/tasks/main.yml
+---
+
+- name: Include OS-specific variables.
+  include_vars: yum_vars.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include OS-specific variables.
+  include_vars: apt_vars.yml
+  when: ansible_os_family == "Debian"
+
+- include: databases.yml
+
+- name: delegate to APT system for installation
+  include: yum.yml
+  when: ansible_os_family == "RedHat"
+
+- name: delegate to YUM system for installation
+  include: apt.yml
+  when: ansible_os_family == "Debian"
+
+- name: Place zabbix-server config
+  include: configure.yml
+
+- name: service zabbix_server start
+  include: service.yml
+

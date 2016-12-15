@@ -1,0 +1,7 @@
+#file roles/php/tasks/service.yml
+---
+
+- name: start php-fpm service
+  service:
+    name: php-fpm
+    state: started

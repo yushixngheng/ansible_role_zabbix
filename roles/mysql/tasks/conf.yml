@@ -1,0 +1,28 @@
+#file roles/mysql/tasks/conf.yml
+---
+- name: Copy the my.cnf.apt.j2 file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ mysql_conf_dir }}/{{ item.dest }}"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: my.cnf.apt.j2, dest: my.cnf }
+  when: ansible_os_family == "Debian"
+
+- name: Copy the my.cnf.yum.j2 file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ mysql_conf_dir }}/{{ item.dest }}"
+    backup: yes
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - { src: my.cnf.yum.j2, dest: my.cnf }
+  when: ansible_os_family == "RedHat"
+  notify:
+    - restart mysql
+

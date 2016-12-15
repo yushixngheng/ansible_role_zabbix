@@ -1,0 +1,12 @@
+#file roles/php/handlers/main.yml
+---
+
+- name: restart php-fpm
+  service:
+    name: php-fpm
+    state: restarted
+
+- name: restart php-fpm
+  service:
+    name: php-fpm
+    state: stop

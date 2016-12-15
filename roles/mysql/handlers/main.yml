@@ -1,0 +1,12 @@
+#file roles/mysql/defaults/main.yml
+---
+
+- name: restart mysql
+  service:
+    name: "{{ mysql_service }}"
+    state: restarted
+
+- name: stop mysql
+  service:
+    name: "{{ mysql_service }}"
+    state: stop

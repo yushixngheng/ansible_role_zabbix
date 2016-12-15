@@ -1,0 +1,57 @@
+# file: zabbix_server/tasks/yum.yml
+---
+- name: Install common pkgs
+  yum: pkg={{item}} state=present
+  with_items:
+    - epel-release
+
+- name: Install Zabbix repository
+  yum: name={{ zabbix.repo_url }} state=present
+
+- name: Disable nodoc setting in yum.conf
+  lineinfile: dest=/etc/yum.conf regexp=^tsflags= state=absent
+
+- name: Install Zabbix packages which require docs
+  yum: pkg={{item}} state=present
+  with_items:
+    - zabbix-server-mysql
+    - zabbix-web-mysql
+    - zabbix-web-japanese
+
+- name: Enable nodoc setting in yum.conf
+  lineinfile: dest=/etc/yum.conf regexp=^tsflags= line=tsflags=nodocs state=present
+
+- name: Install Zabbix packages which requires docs
+  yum: pkg={{item}} state=present
+  with_items:
+    - zabbix-get
+
+- name: check DB tables
+  shell: mysql -uroot -p{{ mysql.root_password }} zabbix -e 'show tables;'
+  register: dbtablestatus
+
+- name: Import Zabbix schema
+  mysql_db: state=import name=zabbix target=/usr/share/doc/zabbix-server-mysql-2.4.8/create/{{ item }} login_user=zabbix login_password={{ zabbix.mysql_password }}
+  with_items:
+    - schema.sql
+    - images.sql
+    - data.sql
+  when: dbtablestatus.stdout_lines|length == 0
+
+- name: Place zabbix-server config file
+  template: src={{ item.src }} dest={{ item.dest }} owner=root group=root backup=yes
+  with_items:
+    - { src: zabbix_server.conf.j2, dest: /etc/zabbix/zabbix_server.conf }
+  notify:
+    - restart zabbix-server
+
+- name: Change owner of zabbix files
+  file: path=/etc/zabbix/web state=directory owner=www group=www recurse=yes backup=yes
+
+
+- name: Place configured file because set up process does not work well.
+  template: src=zabbix.conf.php.j2 dest=/etc/zabbix/web/zabbix.conf.php
+
+
+- name: start zabbix-server
+  service: name=zabbix-server state=started

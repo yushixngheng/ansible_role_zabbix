@@ -1,0 +1,14 @@
+#file roles/mysql/tasks/conf.yml
+---
+
+- name: Create databases
+  mysql_db:
+    name: "{{ item.db }}"
+    state: present
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+  with_items: "{{ mysql_create_db }}"
+
+
+
+

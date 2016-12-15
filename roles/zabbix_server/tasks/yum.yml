@@ -1,0 +1,51 @@
+# file: roles/zabbix_server/tasks/yum.yml
+---
+
+- name: Install Zabbix repository
+  yum:
+    name: "{{ zabbix.repo_url }}"
+    state: present
+
+
+- name: Install Zabbix packages which require docs
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - zabbix-server-mysql
+    - zabbix-web-mysql
+    - zabbix-web-japanese
+
+- name: Install Zabbix packages which requires docs
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - zabbix-get
+
+- name: check DB tables
+  shell: >
+    mysql -uroot -p{{ mysql.root_password }} zabbix -e 'show tables;'
+  register: dbtablestatus
+
+- name: check create.sql.gz exists
+  stat:
+    path: "{{ create_sql_path }}/create.sql.gz"
+  register: st
+
+- name: gunzip create.sql.gz
+  shell: >
+    gunzip {{ create_sql_path }}/create.sql.gz
+  when: st.stat.exists
+
+- name: Import Zabbix schema
+  mysql_db:
+    name: zabbix
+    login_user: zabbix
+    login_password: "{{ zabbix.mysql_password }}"
+    target: "{{ create_sql_path }}/{{ item }}"
+    state: import
+  with_items:
+    - create.sql
+  when: dbtablestatus.stdout_lines|length == 0
+

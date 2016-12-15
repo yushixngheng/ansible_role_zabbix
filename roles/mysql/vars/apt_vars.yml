@@ -1,0 +1,12 @@
+#file roles/mysql/vars/apt_var.yml
+---
+
+mysql_daemon: mysql
+mysql_packages:
+     - mysql-server
+     - python-mysqldb
+mysql_service: mysql
+mysql_conf_dir: "/etc/mysql/"
+
+
+

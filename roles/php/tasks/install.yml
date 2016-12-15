@@ -1,0 +1,13 @@
+#file roles/php/tasks/install.yml`
+- name: rpm php56
+  yum:
+     name: "{{ repo_url }}"
+     state: present
+
+- name: Install PHP
+  yum:
+    name: "{{ item }}"
+    state:  present
+  with_items: "{{ php_depend_package }}"
+
+

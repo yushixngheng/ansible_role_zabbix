@@ -1,0 +1,28 @@
+#file roles/mysql/tasks/main.yml
+---
+
+- name: Include OS-specific variables.
+  include_vars: yum_vars.yml
+  when: ansible_os_family == "RedHat"
+
+- name: Include OS-specific variables.
+  include_vars: apt_vars.yml
+  when: ansible_os_family == "Debian"
+
+- name: delegate to APT system for installation
+  include: yum.yml
+  when: ansible_os_family == "RedHat"
+
+- name: delegate to YUM system for installation
+  include: apt.yml
+  when: ansible_os_family == "Debian"
+
+- name: delegate to YUM system for installation
+  include: init_root_passwd.yml
+  when: ansible_os_family == "RedHat"
+
+- include: databases.yml
+- include: conf.yml
+- include: service.yml
+- include: secure.yml
+- include: users.yml
