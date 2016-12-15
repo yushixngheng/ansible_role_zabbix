@@ -1,0 +1,5 @@
+- hosts: centos1
+  gather_facts: yes
+  user: root
+  roles:
+  - zabbix_server

@@ -1,0 +1,16 @@
+#file zabbix_server/vars/apt_vars.yml
+---
+url_package_release: http://repo.zabbix.com/zabbix/2.4/debian/pool/main/z/zabbix-release/zabbix-release_2.4-1+wheezy_all.deb
+
+zabbix_agent_service: zabbix-agent
+
+zabbix_server_packages:
+  - zabbix-server-mysql
+
+
+zabbix:
+  mysql_password: "_dQfftNTm2-!"
+
+mysql:
+  root_password: '_dQfftNTc2-!'
+app_root: /var/www/zabbix
