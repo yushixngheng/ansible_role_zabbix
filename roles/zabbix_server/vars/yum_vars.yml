@@ -1,0 +1,15 @@
+#file zabbix_server/vars/yum_vars.yml
+---
+
+zabbix:
+  mysql_password: "_dQfftNTm2-!"
+  repo_url: "http://repo.zabbix.com/zabbix/3.0/rhel/6/x86_64/zabbix-release-3.0-1.el6.noarch.rpm"
+mysql:
+  root_password: '_dQfftNTc2-!'
+create_sql_path: /usr/share/doc/zabbix-server-mysql-3.0.6
+
+zabbix_web_path: "/usr/share/zabbix"
+zabbix_web_config_path: "/etc/zabbix/web"
+zabbix_web_nginx_conf_path: "/etc/nginx/conf.d/zabbix_nginx.conf"
+zabbix_web_user: www
+zabbix_web_group: www

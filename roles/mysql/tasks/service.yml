@@ -1,0 +1,9 @@
+#file roles/mysql/tasks/service.yml
+---
+
+- name: start the mysql service ###第一次搭建安装和配置完配置文件是调用
+  service:
+    name: "{{ mysql_service }}"
+    state: restarted
+  ####在以后修改配置文件后调用
+  ###notify: restart mysql

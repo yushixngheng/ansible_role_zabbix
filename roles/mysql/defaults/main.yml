@@ -1,0 +1,23 @@
+#file roles/mysql/defaults/main.yml
+---
+
+# if mysql is already installed, don't try to do it again (galera cluster case)
+mysql_skip_install: false
+# skip restore dump even if url is present (for a cluster for example)
+mysql_skip_dump: false
+
+# should the dumps be restored even if they're already downloaded
+force_restore_db: false
+
+# my.cnf
+mysql_port: 3306
+
+
+# mysql
+mysql_root_username: root
+mysql_root_password: '_dQfftNTc2-!'
+
+# List of databases to be created
+mysql_create_db: []
+
+

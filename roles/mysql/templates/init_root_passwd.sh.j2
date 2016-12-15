@@ -1,0 +1,12 @@
+#!/bin/bash
+sed -i '/\[mysqld\]/a\skip-grant-tables'  {{mysql_conf_dir}}my.cnf
+service {{ mysql_service }} restart
+mysql<<EOF
+use mysql;
+update user set authentication_string = password('{{ mysql_root_password }}'), password_expired = 'N', password_last_changed = now() where user = 'root';
+flush privileges;
+EOF
+exit;
+sed -i '/skip-grant-tables/d' {{mysql_conf_dir}}my.cnf
+service {{ mysql_service }} restart
+

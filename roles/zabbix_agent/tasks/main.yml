@@ -1,0 +1,24 @@
+#file roles/zabbix_agent/tasks/main.yml
+---
+
+- name: Install Zabbix repository
+  yum:
+    name: "{{ zabbix.repo_url }}"
+    state: present
+
+- name: Install zabbix_agent
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - zabbix-agent
+
+- name: Place zabbix-agentd config file
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    backup: yes
+  with_items:
+    - { src: zabbix_agentd.conf.j2, dest: /etc/zabbix/zabbix_agentd.conf }
+  notify:
+    - restart zabbix-agent

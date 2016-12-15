@@ -1,0 +1,66 @@
+#file roles/mysql/tasks/secure.yml
+---
+
+- name: MySQL | Set the root password for all hosts
+  mysql_user:
+    name: "{{ item.db }}"
+    password: "{{ mysql_root_password }}"
+    host: "localhost"
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+    check_implicit_admin: yes
+  with_items: "{{ mysql_create_db }}"
+  register: root_pwd_reg
+
+- name: MySQL | Secure the MySQL root user for IPV6 localhost (::1)
+  mysql_user:
+    name: "{{ item.db }}"
+    password: "{{ mysql_root_password }}"
+    host: ::1
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+  with_items: "{{ mysql_create_db }}"
+
+  tags: common
+
+- name: MySQL | Secure the MySQL root user for IPV4 localhost (127.0.0.1)
+  mysql_user:
+    name: "{{ item.db }}"
+    password: "{{ mysql_root_password }}"
+    host: 127.0.0.1
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+  with_items: "{{ mysql_create_db }}"
+
+
+- name: MySQL | Secure the MySQL root user for localhost domain (localhost)
+  mysql_user:
+    name: "{{ item.db }}"
+    password: "{{ mysql_root_password }}"
+    host: "localhost"
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+  with_items: "{{ mysql_create_db }}"
+
+- name: MySQL | Delete the MySQL root user for {{ ansible_nodename }} domain
+  mysql_user:
+    name: "{{ item.db }}"
+    password: "{{ mysql_root_password }}"
+    host: "{{ ansible_nodename }}"
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+    state: absent
+  with_items: "{{ mysql_create_db }}"
+
+
+- name: MySQL | Remove the MySQL test database
+  mysql_db:
+    db: test
+    state: absent
+    login_user: "{{ mysql_root_username }}"
+    login_password: "{{ mysql_root_password }}"
+  ignore_errors: true
+
+
+
+

@@ -1,0 +1,21 @@
+user {{ nginx_user }};
+worker_processes 2;
+error_log  /var/log/nginx/error.log warn;
+pid  /var/run/nginx.pid;
+worker_rlimit_nofile 51200;
+
+events
+{
+    use epoll;
+    worker_connections 6000;
+}
+
+http
+{
+ server {
+        listen       80;
+        server_name  localhost;
+        root   {{ nginx_htmldir }};
+        index  index.html index.htm;
+        }
+}

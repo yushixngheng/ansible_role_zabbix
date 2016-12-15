@@ -1,0 +1,20 @@
+#file roles/mysql/tasks/apt.yml
+---
+
+- name: Add the mysql ubuntu mainline repository
+  apt_repository:
+    repo: 'deb http://repo.mysql.com/apt/ubuntu/ trusty mysql-5.7'
+    state: present
+
+- name: add mysql.org key
+  apt_key:
+    url: http://repo.mysql.com/RPM-GPG-KEY-mysql
+    state: present
+
+- name: General | Install required packages.
+  apt:
+    pkg: "{{ item }}"
+    update_cache: yes
+    state: installed
+    force: yes
+  with_items: "{{ mysql_packages }}"

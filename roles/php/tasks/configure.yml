@@ -1,0 +1,33 @@
+#file roles/tasks/configure.yml
+---
+
+- name: create php-fpm user and group
+  user:
+    name: "{{ fpm_user }}"
+    createhome: no
+    shell: /bin/nologin
+    state: present
+
+- name: change default session dir owner group
+  file:
+    path: "{{ fpm_pool_session_path }}"
+    owner: "{{ fpm_user }}"
+    group: "{{ fpm_group }}"
+    state: directory
+
+- name: change default log dir owner user
+  file:
+    path: "{{ fpm_pool_log_path }}"
+    owner: "{{ fpm_user }}"
+    state: directory
+
+- name: Place config files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    backup: yes
+  with_items:
+    - { src: www.conf.j2, dest: /etc/php-fpm.d/www.conf }
+    - { src: php.ini.j2, dest: /etc/php.ini }
+  notify:
+    - restart php-fpm
